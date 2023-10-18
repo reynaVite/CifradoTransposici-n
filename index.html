@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Escítala Transposición</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="text-center">
+            <h1 class="mt-5">Escítala Transposición</h1>
+            
+            <div class="form-group mt-3">
+                <label for="message">Mensaje:</label>
+                <input type="text" class="form-control" id="message">
+            </div>
+            <div class="form-group">
+                <label for="key">Número de vueltas:</label>
+                <input type="number" class="form-control" id="key">
+            </div>
+
+            <button class="btn btn-primary" onclick="encrypt()">Cifrar</button>
+            <button class="btn btn-primary" onclick="decrypt()">Descifrar</button>
+
+            <div id="output" class="mt-3"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function encrypt() {
+            const message = document.getElementById('message').value;
+            const key = parseInt(document.getElementById('key').value);
+            const encryptedMessage = escitalaEncrypt(message, key);
+            document.getElementById('output').innerText = 'Mensaje cifrado: ' + encryptedMessage;
+        }
+
+        function decrypt() {
+            const message = document.getElementById('message').value;
+            const key = parseInt(document.getElementById('key').value);
+            const decryptedMessage = escitalaDecrypt(message, key);
+            document.getElementById('output').innerText = 'Mensaje descifrado: ' + decryptedMessage;
+        }
+
+        function escitalaEncrypt(message, key) {
+            let encryptedMessage = '';
+            for (let i = 0; i < key; i++) {
+                for (let j = i; j < message.length; j += key) {
+                    encryptedMessage += message[j];
+                }
+            }
+            return encryptedMessage;
+        }
+
+        function escitalaDecrypt(message, key) {
+            const numRows = Math.ceil(message.length / key);
+            const numCols = key;
+            const decryptedMessage = Array.from({ length: numRows }, () => Array(numCols).fill(''));
+
+            let index = 0;
+            for (let j = 0; j < numCols; j++) {
+                for (let i = 0; i < numRows; i++) {
+                    if (index < message.length) {
+                        decryptedMessage[i][j] = message[index];
+                        index++;
+                    }
+                }
+            }
+
+            let originalMessage = '';
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < numCols; j++) {
+                    originalMessage += decryptedMessage[i][j];
+                }
+            }
+
+            return originalMessage;
+        }
+    </script>
+</body>
+</html>
